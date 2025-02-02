@@ -1,6 +1,6 @@
 #!/bin/bash
 
 GITHUB_SHA=$1
-IMAGE=$(ko build --base-import-paths --platform=all -t latest -t "sha-$GITHUB_SHA" ./)
+IMAGE=$(ko build --base-import-paths --platform="linux/arm64,linux/amd64" -t latest -t "sha-$GITHUB_SHA" ./)
 echo "built $IMAGE"
 cosign sign "$IMAGE" --yes -a sha="sha-$GITHUB_SHA"

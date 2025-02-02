@@ -34,6 +34,6 @@ jobs:
 
       - name: Release
         run: |
-          devbox run -- ./release.sh 
+          devbox run -- ./release.sh ${{ github.sha }}
         env:
-          KO_DOCKER_REPO: ghcr.io/${{ github.repository }}
+          KO_DOCKER_REPO: ghcr.io/${{ github.repository_owner }}
