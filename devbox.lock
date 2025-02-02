@@ -1,6 +1,54 @@
 {
   "lockfile_version": "1",
   "packages": {
+    "cosign@2.4.1": {
+      "last_modified": "2025-01-19T08:16:51Z",
+      "resolved": "github:NixOS/nixpkgs/50165c4f7eb48ce82bd063e1fb8047a0f515f8ce#cosign",
+      "source": "devbox-search",
+      "version": "2.4.1",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/z2ks68i8nbzp0v4bv6rgfl497m3wqg7m-cosign-2.4.1",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/z2ks68i8nbzp0v4bv6rgfl497m3wqg7m-cosign-2.4.1"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/bg5vb890i6dwcdlr89ihqr1wzyassw1i-cosign-2.4.1",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/bg5vb890i6dwcdlr89ihqr1wzyassw1i-cosign-2.4.1"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/hnqflpvi8z5g2c5jlmds1czxz0qwk6nv-cosign-2.4.1",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/hnqflpvi8z5g2c5jlmds1czxz0qwk6nv-cosign-2.4.1"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/wxhiz0ljc4l62mghyriiib6sk7k1j47x-cosign-2.4.1",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/wxhiz0ljc4l62mghyriiib6sk7k1j47x-cosign-2.4.1"
+        }
+      }
+    },
     "gnumake@4.4.1": {
       "last_modified": "2024-12-31T12:41:15Z",
       "resolved": "github:NixOS/nixpkgs/47e29c20abef74c45322eca25ca1550cdf5c3b50#gnumake",

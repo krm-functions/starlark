@@ -1,0 +1,41 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - '*'
+    branches:
+      - main
+    paths-ignore:
+      - README.md
+      - DEVELOPER.md
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # v4.2.0
+
+      - name: Install devbox
+        uses: jetify-com/devbox-install-action@734088efddca47cf44ff8a09289c6d0e51b73218 # v0.12.0
+
+      - name: Build and test
+        run: |
+          devbox run -- make build test-bin lint container test-container
+
+      - name: Login to GitHub Container Registry
+        run: |
+          devbox run -- echo "${{ github.token }}" | ko login ghcr.io --username "${{ github.actor }}" --password-stdin
+
+      - name: Release
+        run: |
+          devbox run -- IMAGE=$(ko build --base-import-paths --platform=all -t latest -t ${{ github.sha }} ./); \
+            echo "built ${IMAGE}"; \
+            cosign sign ${IMAGE} --yes \
+              -a sha=${{ github.sha }} \
+              -a run_id=${{ github.run_id }} \
+              -a run_attempt=${{ github.run_attempt }}
