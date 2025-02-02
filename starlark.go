@@ -21,7 +21,6 @@ import (
 	"sigs.k8s.io/kustomize/kyaml/fn/framework/command"
 	"sigs.k8s.io/kustomize/kyaml/fn/runtime/runtimeutil"
 	"sigs.k8s.io/kustomize/kyaml/fn/runtime/starlark"
-	"sigs.k8s.io/kustomize/kyaml/kio"
 	"sigs.k8s.io/kustomize/kyaml/yaml"
 )
 
@@ -33,22 +32,19 @@ const (
 )
 
 type FunctionConfig struct {
-	yaml.ResourceMeta `yaml:".inline" json:".inline"`
+	yaml.ResourceMeta `yaml:",inline" json:",inline"`
 	Params            map[string]any `yaml:"params,omitempty" json:"params,omitempty"`
 	Source            string         `yaml:"source,omitempty" json:"source,omitempty"`
 }
-
-// type FilterState struct {
-// 	fnConfig  *FunctionConfig
-// 	Results   framework.Results
-// }
 
 func (fncfg *FunctionConfig) Default() error { //nolint:unparam // this return is part of the Defaulter interface
 	return nil
 }
 
 func (fncfg *FunctionConfig) Validate() error {
-	// TODO: Check api version and kind
+	if fncfg.TypeMeta.APIVersion != starlarkRunAPIVersion || fncfg.TypeMeta.Kind != starlarkRunKind {
+		return fmt.Errorf("unknown function-config: %v/%v", fncfg.TypeMeta.APIVersion, fncfg.TypeMeta.Kind)
+	}
 	if fncfg.Source == "" {
 		return fmt.Errorf("starlark source cannot be empty")
 	}
@@ -61,24 +57,16 @@ func Processor() framework.ResourceListProcessor {
 		if err := framework.LoadFunctionConfig(rl.FunctionConfig, fncfg); err != nil {
 			return fmt.Errorf("reading function-config: %w", err)
 		}
-		// filter := FilterState{
-		// 	fnConfig:  config,
-		// }
 		fltr := starlark.Filter{
 			Name:           fncfg.NameMeta.Name,
 			Program:        fncfg.Source,
 			FunctionFilter: runtimeutil.FunctionFilter{FunctionConfig: rl.FunctionConfig},
 		}
 
-		var out []*yaml.RNode
-		err := kio.Pipeline{
-			Inputs:  []kio.Reader{&kio.PackageBuffer{}},
-			Filters: []kio.Filter{&fltr},
-			Outputs: []kio.Writer{&kio.PackageBuffer{out}},
-		}.Execute()
-		fmt.Fprintf(os.Stderr, ">> %v\n", len(out))
-
-		//rl.Results = append(rl.Results, filter.Results...)
+		out, err := fltr.Filter(rl.Items)
+		if err == nil {
+			rl.Items = out
+		}
 
 		return err
 	})
