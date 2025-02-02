@@ -30,13 +30,8 @@ jobs:
 
       - name: Login to GitHub Container Registry
         run: |
-          devbox run -- echo "${{ github.token }}" | ko login ghcr.io --username "${{ github.actor }}" --password-stdin
+          devbox run -- bash -c 'echo "${{ github.token }}" | ko login ghcr.io --username "${{ github.actor }}" --password-stdin'
 
       - name: Release
         run: |
-          devbox run -- IMAGE=$(ko build --base-import-paths --platform=all -t latest -t ${{ github.sha }} ./); \
-            echo "built ${IMAGE}"; \
-            cosign sign ${IMAGE} --yes \
-              -a sha=${{ github.sha }} \
-              -a run_id=${{ github.run_id }} \
-              -a run_attempt=${{ github.run_attempt }}
+          devbox run -- ./release.sh 
