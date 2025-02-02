@@ -35,3 +35,5 @@ jobs:
       - name: Release
         run: |
           devbox run -- ./release.sh 
+        env:
+          KO_DOCKER_REPO: ghcr.io/${{ github.repository }}
