@@ -20,14 +20,19 @@ container:
 test-bin:
 	rm -rf _tmp _results
 	kpt fn source examples | kpt fn eval - --truncate-output=false --exec $(STARLARK) --fn-config example-function-config/set-annotation.yaml | kpt fn sink _tmp
-	make do-tests
+	make validate-test-result
 
 .PHONY: test-container
 test-container:
 	rm -rf _tmp _results
 	kpt fn source examples | kpt fn eval --results-dir _results - --image $(STARLARK_IMAGE) --fn-config example-function-config/set-annotation.yaml | kpt fn sink _tmp
-	make do-tests
+	make validate-test-result
 
-.PHONY: do-tests
-do-tests:
+.PHONY: validate-test-result
+validate-test-result:
 	cat _tmp/deployment.yaml | yq '.metadata.annotations.foo' | grep bar
+
+.PHONY: test-non-standard
+test-non-standard:
+	rm -rf _tmp _results
+	kpt fn source examples | kpt fn eval - --truncate-output=false --exec $(STARLARK) --fn-config example-function-config/recursion.yaml | kpt fn sink _tmp

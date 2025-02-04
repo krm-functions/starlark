@@ -1,0 +1,15 @@
+apiVersion: fn.kpt.dev/v1alpha1
+kind: StarlarkRun
+metadata:
+  name: set-recursion
+source: |    
+  def fib(x):  # Test recursion
+    if x < 2:
+      return x
+    return fib(x-2) + fib(x-1)
+
+  s=set(["foo", "bar"]) # Test sets
+
+  f = fib(14)
+  if f==377:  # Test statements not within function
+    print("OK")

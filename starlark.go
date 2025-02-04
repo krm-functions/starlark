@@ -17,6 +17,7 @@ import (
 	"fmt"
 	"os"
 
+        "go.starlark.net/resolve"
 	"sigs.k8s.io/kustomize/kyaml/fn/framework"
 	"sigs.k8s.io/kustomize/kyaml/fn/framework/command"
 	"sigs.k8s.io/kustomize/kyaml/fn/runtime/runtimeutil"
@@ -74,7 +75,9 @@ func Processor() framework.ResourceListProcessor {
 
 func main() {
 	cmd := command.Build(Processor(), command.StandaloneEnabled, false)
-
+        resolve.AllowRecursion = true
+        resolve.AllowGlobalReassign = true
+        resolve.AllowSet = true
 	if err := cmd.Execute(); err != nil {
 		os.Exit(1)
 	}
