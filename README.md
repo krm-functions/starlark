@@ -45,7 +45,8 @@ data:
 Example:
 
 ```shell
-kpt fn source examples | kpt fn eval --results-dir _results - --image ghcr.io/krm-functions/starlark --fn-config example-function-config/set-annotation.yaml
+kpt fn source examples | \
+    kpt fn eval - --image ghcr.io/krm-functions/starlark --fn-config example-function-config/set-annotation.yaml
 ```
 
 which will produce:
