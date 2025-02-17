@@ -21,11 +21,17 @@ test-bin:
 	rm -rf _tmp _results
 	kpt fn source examples | kpt fn eval - --truncate-output=false --exec $(STARLARK) --fn-config example-function-config/set-annotation.yaml | kpt fn sink _tmp
 	make validate-test-result
+	rm -rf _tmp _results
+	kpt fn source examples | kpt fn eval - --truncate-output=false --exec $(STARLARK) --fn-config example-function-config/cm-set-annotation.yaml | kpt fn sink _tmp
+	make validate-test-result
 
 .PHONY: test-container
 test-container:
 	rm -rf _tmp _results
 	kpt fn source examples | kpt fn eval --results-dir _results - --image $(STARLARK_IMAGE) --fn-config example-function-config/set-annotation.yaml | kpt fn sink _tmp
+	make validate-test-result
+	rm -rf _tmp _results
+	kpt fn source examples | kpt fn eval --results-dir _results - --image $(STARLARK_IMAGE) --fn-config example-function-config/cm-set-annotation.yaml | kpt fn sink _tmp
 	make validate-test-result
 
 .PHONY: validate-test-result

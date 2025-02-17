@@ -19,8 +19,27 @@ source: |
     for resource in ctx.resource_list["items"]:
       for key in toAdd:
         resource["metadata"]["annotations"][key] = toAdd[key]
-
   main()
+```
+
+Alternatively a `ConfigMap` can be used. The Starlark source must provided in `source`
+and additional fields can be referenced in the code:
+
+```yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: set-annotations
+data:
+  foo: bar
+  baz: olo
+  source: |
+    def main():
+      fncfg = ctx.resource_list["functionConfig"]["data"]
+      for resource in ctx.resource_list["items"]:
+        for key in fncfg: 
+          resource["metadata"]["annotations"][key] = fncfg[key]
+    main()
 ```
 
 Example:
