@@ -17,7 +17,8 @@ import (
 	"fmt"
 	"os"
 
-        "go.starlark.net/resolve"
+	"go.starlark.net/resolve"
+	corev1 "k8s.io/api/core/v1"
 	"sigs.k8s.io/kustomize/kyaml/fn/framework"
 	"sigs.k8s.io/kustomize/kyaml/fn/framework/command"
 	"sigs.k8s.io/kustomize/kyaml/fn/runtime/runtimeutil"
@@ -38,24 +39,37 @@ type FunctionConfig struct {
 	Source            string         `yaml:"source,omitempty" json:"source,omitempty"`
 }
 
-func (fncfg *FunctionConfig) Default() error { //nolint:unparam // this return is part of the Defaulter interface
-	return nil
-}
-
-func (fncfg *FunctionConfig) Validate() error {
-	if fncfg.TypeMeta.APIVersion != starlarkRunAPIVersion || fncfg.TypeMeta.Kind != starlarkRunKind {
-		return fmt.Errorf("unknown function-config: %v/%v", fncfg.TypeMeta.APIVersion, fncfg.TypeMeta.Kind)
+func (fnCfg *FunctionConfig) LoadFunctionConfig(o *yaml.RNode) error {
+	if o.GetKind() == "ConfigMap" && o.GetApiVersion() == "v1" {
+		var cm corev1.ConfigMap
+		if err := yaml.Unmarshal([]byte(o.MustString()), &cm); err != nil {
+			return err
+		}
+		_, ok := cm.Data["source"]
+		if !ok {
+			return fmt.Errorf("no 'source' in function-config")
+		}
+		fnCfg.Source = cm.Data["source"]
+		fnCfg.Params = map[string]any{}
+		for k, v := range cm.Data {
+			if k != "source" {
+				fnCfg.Params[k] = v
+			}
+		}
+		return nil
+	} else if o.GetKind() == starlarkRunKind && o.GetApiVersion() == starlarkRunAPIVersion {
+		if err := yaml.Unmarshal([]byte(o.MustString()), &fnCfg); err != nil {
+			return err
+		}
+		return nil
 	}
-	if fncfg.Source == "" {
-		return fmt.Errorf("starlark source cannot be empty")
-	}
-	return nil
+	return fmt.Errorf("unknown function config")
 }
 
 func Processor() framework.ResourceListProcessor {
 	return framework.ResourceListProcessorFunc(func(rl *framework.ResourceList) error {
 		fncfg := &FunctionConfig{}
-		if err := framework.LoadFunctionConfig(rl.FunctionConfig, fncfg); err != nil {
+		if err := fncfg.LoadFunctionConfig(rl.FunctionConfig); err != nil {
 			return fmt.Errorf("reading function-config: %w", err)
 		}
 		fltr := starlark.Filter{
@@ -75,9 +89,9 @@ func Processor() framework.ResourceListProcessor {
 
 func main() {
 	cmd := command.Build(Processor(), command.StandaloneEnabled, false)
-        resolve.AllowRecursion = true
-        resolve.AllowGlobalReassign = true
-        resolve.AllowSet = true
+	resolve.AllowRecursion = true
+	resolve.AllowGlobalReassign = true
+	resolve.AllowSet = true
 	if err := cmd.Execute(); err != nil {
 		os.Exit(1)
 	}

@@ -2,7 +2,7 @@ apiVersion: fn.kpt.dev/v1alpha1
 kind: StarlarkRun
 metadata:
   name: set-recursion
-source: |    
+source: |
   def fib(x):  # Test recursion
     if x < 2:
       return x

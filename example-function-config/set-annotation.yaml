@@ -6,11 +6,10 @@ params:
   toAdd:
     foo: bar
     baz: olo
-source: |    
+source: |
   def main():
     toAdd = ctx.resource_list["functionConfig"]["params"]["toAdd"]
     for resource in ctx.resource_list["items"]:
       for key in toAdd:
         resource["metadata"]["annotations"][key] = toAdd[key]
-
   main()
