@@ -9,6 +9,7 @@ on:
     paths-ignore:
       - README.md
       - DEVELOPER.md
+      - catalog.json
 jobs:
   build:
     runs-on: ubuntu-latest
