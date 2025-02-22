@@ -1,0 +1,10 @@
+{
+  "functions": [
+    {
+      "description": "KRM function that allow resource modification defined by Starlark programs",
+      "image": "ghcr.io/krm-functions/starlark",
+      "digest": "",
+      "builder": "https://github.com/krm-functions/starlark/.github/workflows/build.yaml"
+    }
+  ]
+}
