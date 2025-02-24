@@ -1,7 +1,9 @@
 {
+  "version": "1",
   "functions": [
     {
-      "description": "KRM function that allow resource modification defined by Starlark programs",
+      "description": "KRM function for resource modification defined by Starlark programs",
+      "documentaion": "https://github.com/krm-functions/starlark/blob/main/README.md",
       "image": "ghcr.io/krm-functions/starlark",
       "digest": "sha256:27afc2f396aa6d82375950b6bebe5c317dd6e32efb8788cb27ba0ee70bc0ebcb",
       "builder": "https://github.com/krm-functions/starlark/.github/workflows/build.yaml"
