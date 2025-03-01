@@ -1,0 +1,9 @@
+apiVersion: v1 
+kind: ConfigMap
+metadata:
+  name: some-data
+data:
+  foo: bar
+  baz: olo
+  largeSignedInt: 2147483647   # 0x7fffffff
+  largeUnsignedInt: 2147483648 # 0x80000000

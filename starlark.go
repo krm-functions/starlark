@@ -17,12 +17,11 @@ import (
 	"fmt"
 	"os"
 
+	starlark "github.com/krm-functions/starlark/starlark-filter"
 	"go.starlark.net/resolve"
 	corev1 "k8s.io/api/core/v1"
 	"sigs.k8s.io/kustomize/kyaml/fn/framework"
 	"sigs.k8s.io/kustomize/kyaml/fn/framework/command"
-	"sigs.k8s.io/kustomize/kyaml/fn/runtime/runtimeutil"
-	"sigs.k8s.io/kustomize/kyaml/fn/runtime/starlark"
 	"sigs.k8s.io/kustomize/kyaml/yaml"
 )
 
@@ -72,10 +71,10 @@ func Processor() framework.ResourceListProcessor {
 		if err := fncfg.LoadFunctionConfig(rl.FunctionConfig); err != nil {
 			return fmt.Errorf("reading function-config: %w", err)
 		}
-		fltr := starlark.Filter{
+		fltr := starlark.SimpleFilter{
 			Name:           fncfg.NameMeta.Name,
 			Program:        fncfg.Source,
-			FunctionFilter: runtimeutil.FunctionFilter{FunctionConfig: rl.FunctionConfig},
+			FunctionConfig: rl.FunctionConfig,
 		}
 
 		out, err := fltr.Filter(rl.Items)
