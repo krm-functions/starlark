@@ -5,7 +5,7 @@
       "description": "KRM function for resource modification defined by Starlark programs",
       "documentaion": "https://github.com/krm-functions/starlark/blob/main/README.md",
       "image": "ghcr.io/krm-functions/starlark",
-      "digest": "sha256:27afc2f396aa6d82375950b6bebe5c317dd6e32efb8788cb27ba0ee70bc0ebcb",
+      "digest": "sha256:89b14ce21f99120090d98c406ec5a98286d0339231d10b580ce917fe60c912ff",
       "builder": "https://github.com/krm-functions/starlark/.github/workflows/build.yaml"
     }
   ]
