@@ -2,7 +2,7 @@
   "version": "1",
   "functions": [
     {
-      "description": "KRM function for resource modification defined by Starlark programs",
+      "description": "Resource modification defined by Starlark programs",
       "documentaion": "https://github.com/krm-functions/starlark/blob/main/README.md",
       "image": "ghcr.io/krm-functions/starlark",
       "digest": "sha256:8f3a98f95fdab258fdb1a6f1868393daa8c10b43f57ecb4f4ff8bd20203fc450",
