@@ -3,7 +3,7 @@
   "functions": [
     {
       "description": "Resource modification defined by Starlark programs",
-      "documentaion": "https://github.com/krm-functions/starlark/blob/main/README.md",
+      "documentation": "https://github.com/krm-functions/starlark/blob/main/README.md",
       "image": "ghcr.io/krm-functions/starlark",
       "digest": "sha256:8f3a98f95fdab258fdb1a6f1868393daa8c10b43f57ecb4f4ff8bd20203fc450",
       "builder": "https://github.com/krm-functions/starlark/.github/workflows/build.yaml"
